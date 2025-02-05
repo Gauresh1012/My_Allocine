@@ -1,0 +1,51 @@
+-- create database movies;
+-- use movies;
+select * from actor;
+select * from director_movies;
+select * from directors;
+select * from genres;
+select * from movies;
+select * from movies_actors;
+select * from movies_genres;
+select * from movies_rating_reviews;
+select * from reviews;
+
+-- Find the year when the movie American Beauty released
+  select mov_title,mov_year from movies where mov_title ='American Beauty';
+
+-- Find the movie which was released inthe year1999
+select mov_title,mov_year from movies where mov_year=1999;
+
+-- Find the movie which was released before1998
+select mov_title ,mov_year from movies where mov_year < 1998;
+
+-- Find the name of all reviewers who have rated 7 or more stars to their rating order by reviews rev_name (it might have duplicated names 
+select r.rev_name, mrr.rev_stars from reviews r join movies_rating_reviews mrr on r.id=mrr.rev_id
+where rev_stars > 7 order by 1 asc;
+
+-- Find the titles of the movies with ID 905, 907, 917"
+select id,mov_title from movies where id= '905' or id='907' or id='917' ;
+
+-- Find the list of those movies with year and ID which include the words Boogie Nights
+select id,mov_title,mov_year from movies where mov_title like'%Boogie Nights%';
+
+-- "Find the ID number for the actor whose first name is 'c' and the last name is 'Allen'"
+select id from actor where act_fname like '%woody';
+
+-- Find the actors with all information who played a role in the movies 'Annie Hall
+select actor.id,act_fname from actor ,movies_actors,movies where mov_title ='Annie Hall';
+
+-- Find the first and last names of all the actors who were cast in the movies 'Annie Hall', and the roles they played in that production
+select act_fname,act_lname,role from movies ,movies_actors,actor where movies.mov_title ='Annie Hall' and movies_actors.act_id=actor.id AND movies_actor .mov_id=movies.id;
+
+-- Find the name of movie and director who directed a movies that casted a role as Sean Maguire
+select m.mov_title,d.dir_fname,d.dir_lname,role from movies m join director_movies dm on m.id=dm.mov_id
+join directors d on dm.dir_id=d.id join movies_actors ma on m.id=ma.mov_id  where role='Sean Maguire';
+
+-- Find all the actors who have not acted in any movie between 1990 and 2000
+select act_fname,act_lname,mov_title,extract(Year from mov_dt_rel) as release_year from actor a join movies_actors ma on a.id=ma.act_id 
+join movies m on ma.mov_id=m.id having release_year not between 1990 and 2000;
+
+
+
+
